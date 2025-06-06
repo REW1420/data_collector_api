@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model comments {
+  comment_id   String    @id
+  post_id      String?
+  message      String?
+  created_time DateTime? @db.Timestamp(6)
+  posts        posts?    @relation(fields: [post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model insights {
+  id       Int       @id @default(autoincrement())
+  page_id  String?
+  name     String?
+  period   String?
+  value    Int?
+  end_time DateTime? @db.Timestamp(6)
+  pages    pages?    @relation(fields: [page_id], references: [page_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model pages {
+  page_id    String     @id
+  user_id    String?
+  name       String?
+  created_at DateTime?  @default(now()) @db.Timestamp(6)
+  insights   insights[]
+  users      users?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  posts      posts[]
+}
+
+model posts {
+  post_id      String      @id
+  page_id      String?
+  message      String?
+  created_time DateTime?   @db.Timestamp(6)
+  comments     comments[]
+  pages        pages?      @relation(fields: [page_id], references: [page_id], onDelete: NoAction, onUpdate: NoAction)
+  reactions    reactions[]
+}
+
+model reactions {
+  user_id      String
+  post_id      String
+  type         String?
+  created_time DateTime? @db.Timestamp(6)
+  posts        posts     @relation(fields: [post_id], references: [post_id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([user_id, post_id])
+}
+
+model users {
+  user_id          String    @id
+  name             String?
+  email            String?
+  access_token     String?
+  token_expires_at DateTime? @db.Timestamp(6)
+  page_id          Int?
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+  pages            pages[]
+}
