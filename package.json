@@ -13,12 +13,15 @@
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "fb": "^2.0.0",
-    "prisma": "^6.9.0"
+    "prisma": "^6.9.0",
+    "sentiment-spanish": "^0.0.8"
   },
   "devDependencies": {
     "@types/express": "^5.0.2",
+    "@types/fb": "^0.0.30",
     "@types/node": "^22.15.30",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
